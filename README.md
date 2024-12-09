@@ -1,2 +1,2 @@
 # Styxa projekt
-This is the Styxa project
+This is the Styxa project.
