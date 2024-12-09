@@ -3,7 +3,7 @@ import {
   addUser,
   updateUser,
   deleteUser,
-  userLogin
+  findUserByUsername
 } from '../db/users.js'
 import Joi from 'joi'
 import bcrypt from 'bcrypt'
@@ -25,8 +25,7 @@ const updateRule = Joi.object({
 
 const loginRule = Joi.object({
   username: Joi.string().required().min(3),
-  password: Joi.string().required().min(3),
-  confirmPassword: Joi.string().required().min(3)
+  password: Joi.string().required().min(3)
 })
 
 async function GetUsers(req, res) {
@@ -63,20 +62,23 @@ async function DeleteUser(req, res) {
 //////////////
 async function UserLogin(req, res) {
   try {
-    const { username, password, confirmPassword } =
-      await loginRule.validateAsync(req.body)
-    const secretPassword = await bcrypt.hash(password, 10)
-    const same = await bcrypt.compare(confirmPassword, secretPassword)
-
-    if (!same) {
-      res.status(400).send('The two passwords do not match!')
+    const { username, password } = await loginRule.validateAsync(req.body)
+    const userResult = await client.query(`
+      SELECT * FROM users WHERE username = '${username}'
+    `)
+    if (userResult.rows.length === 0) {
+      res.status(401).send('Username does not exist!')
       return
     }
-
-    await userLogin(username, secretPassword)
+    const user = userResult.rows[0]
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+    if (!isPasswordCorrect) {
+      res.status(401).send('Invalid password!')
+      return
+    }
     res.send('Successfully logged in!')
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send(error.message)
   }
 }
 //////////////

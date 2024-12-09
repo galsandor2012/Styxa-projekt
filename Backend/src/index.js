@@ -19,7 +19,7 @@ server.use(cors())
 server.use(morgan('dev'))
 server.use(bodyParser.json())
 
-server.use('/counties', countryRouter)
+server.use('/countries', countryRouter)
 server.use('/cities', cityRouter)
 server.use('/pointofinterests', pointofinterestsRouter)
 server.use('/users', usersRouter)

@@ -11,16 +11,16 @@ const addRule = Joi.object({
   id: Joi.number().required(),
   name: Joi.string().required().min(3),
   description: Joi.string().required().min(3),
-  latitude: Joi.string().required().min(3),
-  longitude: Joi.string().required().min(3)
+  latitude: Joi.number().required(),
+  longitude: Joi.number().required()
 })
 
 const updateRule = Joi.object({
   id: Joi.number().required(),
   name: Joi.string().required().min(3),
   description: Joi.string().required().min(3),
-  latitude: Joi.string().required().min(3),
-  longitude: Joi.string().required().min(3)
+  latitude: Joi.number().required(),
+  longitude: Joi.number().required()
 })
 
 async function GetCounties(req, res) {

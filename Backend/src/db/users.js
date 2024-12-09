@@ -24,7 +24,7 @@ export async function addUser(firstname, lastname, username, password) {
 `)
 }
 
-export async function updateUser(id, firstname, lastname, username, password) {
+export async function updateUser(firstname, lastname, username, password) {
   const user = await client.query(`
     UPDATE users
     SET firstname = '${firstname}', lastname = '${lastname}', username = '${username}', password = '${password}'
@@ -41,9 +41,16 @@ export async function deleteUser(id) {
   return user.rows
 }
 
-export async function userLogin(id) {
-  await client.query(`
-      SELECT * FROM users
-      WHERE id = '${id}'
-  `)
+//export async function userLogin(id) {
+//  await client.query(`
+//      SELECT * FROM users
+//      WHERE id = '${id}'
+//  `)
+//}
+
+export async function findUserByUsername(username) {
+  const result = await client.query('SELECT * FROM users WHERE username = $1', [
+    username
+  ])
+  return result.rows[0]
 }

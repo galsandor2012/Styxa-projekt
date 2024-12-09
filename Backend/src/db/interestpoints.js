@@ -41,17 +41,29 @@ export async function getPointOfInterestsById(id) {
   }
 }
 
-export async function addPointOfInterests(name, description, city_id) {
+export async function addPointOfInterests(
+  name,
+  description,
+  city_id,
+  googlemapsurl,
+  image
+) {
   await client.query(`
-      INSERT INTO pointofinterests (id, name, description, city_id)
-      VALUES (default, '${name}', '${description}','${city_id}'())
+      INSERT INTO pointofinterests (id, name, description, city_id, googlemapsurl, image)
+      VALUES (default, '${name}', '${description}','${city_id}','${googlemapsurl}','${image}'())
   `)
 }
 
-export async function updatePointOfInterests(id, name, description, city_id) {
+export async function updatePointOfInterests(
+  name,
+  description,
+  city_id,
+  googlemapsurl,
+  image
+) {
   const pointofinterests = await client.query(`
         UPDATE pointofinterests
-        SET name = '${name}', description = '${description}',  city_id = '${city_id}'
+        SET name = '${name}', description = '${description}', city_id = '${city_id}', googlemapsurl = '${googlemapsurl}', image = '${image}'
         WHERE id = ${id}
         `)
   return pointofinterests.rows

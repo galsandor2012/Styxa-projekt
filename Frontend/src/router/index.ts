@@ -20,9 +20,19 @@ const router = createRouter({
       component: () => import('../views/CityDetailView.vue'),
     },
     {
+      path: '/points',
+      name: 'points',
+      component: () => import('../views/PointsView.vue'),
+    },
+    {
       path: '/point/:id',
       name: 'pointById',
-      component: () => import('../views/PointOfInterestView.vue'),
+      component: () => import('../views/PointsDetailView.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
     },
   ],
 })

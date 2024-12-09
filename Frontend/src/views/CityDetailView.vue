@@ -4,6 +4,7 @@
     <h2><b>Name:</b> {{ localCity.name }}</h2>
     <h2><b>Description:</b> {{ localCity.description }}</h2>
     <h2><b>Population:</b> {{ localCity.population }}</h2>
+    <!-- <h2><b>Co:</b> {{ localCity.country_id }}</h2> -->
   </div>
 </template>
 

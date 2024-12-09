@@ -39,13 +39,7 @@ export async function addCountry(name, description, latitude, longitude) {
   `)
 }
 
-export async function updateCountry(
-  id,
-  name,
-  description,
-  latitude,
-  longitude
-) {
+export async function updateCountry(name, description, latitude, longitude) {
   const country = await client.query(`
         UPDATE country
         SET name = '${name}', description = '${description}',  latitude = '${latitude}', longitude = '${longitude}'
