@@ -2,13 +2,17 @@
   <div class="flex w-full justify-between items-center mb-8">
     <h1 class="text-2xl font-semibold text-gray-900">Cities</h1>
     <BaseButton :type="ButtonType.PRIMARY" text="Add New City" @click="isCreateModalOpen = true" />
+    <!-- <BaseButton :type="ButtonType.PRIMARY" text="Update City" @click="openEditModal(row.id) = true" /> -->
   </div>
 
   <BaseTable
     :headers="citiesHeader"
     :data="cityStore.cities"
     @on-row-click="onCityTableRowClicked"
-  />
+    #action="{ row }"
+  >
+    >
+  </BaseTable>
 
   <BaseModal
     :is-open="isCreateModalOpen"
@@ -52,6 +56,53 @@
             :type="InputType.NUMBER"
             label="Country ID"
             placeholder="Add your new city's country ID..."
+          />
+        </div>
+      </div>
+    </div>
+  </BaseModal>
+  <BaseModal
+    :is-open="isEditModalOpen"
+    :is-primary-button-disabled="cityStore.isLoading"
+    primary-button-text="Save Changes"
+    title="Edit City"
+    description="Modify the selected city's information."
+    @on-close="closeEditModal"
+    @on-action-click="editCity"
+  >
+    <div class="sm:flex sm:items-start">
+      <div
+        class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:size-10"
+      >
+        <component :is="BuildingOfficeIcon" class="size-6 text-indigo-600" aria-hidden="true" />
+      </div>
+      <div class="flex flex-col gap-y-8 ml-4">
+        <h1 class="text-3xl font-semibold text-gray-900">Editing {{ selectedCity?.name }}</h1>
+
+        <div class="flex flex-col gap-y-4 w-[300px]">
+          <BaseInput
+            v-model="selectedCity.name"
+            :type="InputType.TEXT"
+            label="Name"
+            placeholder="City name..."
+          />
+          <BaseInput
+            v-model="selectedCity.description"
+            :type="InputType.TEXT"
+            label="Description"
+            placeholder="City description..."
+          />
+          <BaseInput
+            v-model="selectedCity.population"
+            :type="InputType.NUMBER"
+            label="Population"
+            placeholder="City population..."
+          />
+          <BaseInput
+            v-model="selectedCity.googleMapsUrl"
+            :type="InputType.TEXT"
+            label="Google Maps URL"
+            placeholder="Google Maps URL..."
           />
         </div>
       </div>
@@ -116,4 +167,29 @@ function onCityTableRowClicked(id: number) {
 onBeforeMount(async () => {
   await cityStore.getCities()
 })
+
+const isEditModalOpen = ref(false)
+const selectedCity = ref<City | null>(null)
+
+function openEditModal(cityId: number) {
+  const city = cityStore.cities.find((c) => c.id === cityId)
+  if (city) {
+    selectedCity.value = { ...city }
+    isEditModalOpen.value = true
+  }
+}
+
+function closeEditModal() {
+  isEditModalOpen.value = false
+  selectedCity.value = null
+}
+
+async function editCity() {
+  if (selectedCity.value) {
+    cityStore.setIsLoading(true)
+    await cityStore.updateCity(selectedCity.value.id, selectedCity.value)
+    closeEditModal()
+    cityStore.setIsLoading(false)
+  }
+}
 </script>

@@ -56,5 +56,25 @@ export const useCityStore = defineStore('city', {
         console.error('Error addin a new city: ', error)
       }
     },
+    async updateCity(id: number, city: Partial<City>) {
+      try {
+        const response = await fetch(`http://localhost:4000/cities/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(city),
+        })
+        const updatedCity = await response.json()
+        if (updatedCity) {
+          const index = this.cities.findIndex((c) => c.id === id)
+          if (index !== -1) {
+            this.cities[index] = updatedCity
+          }
+        }
+      } catch (error) {
+        console.error('Error updating city: ', error)
+      }
+    },
   },
 })
